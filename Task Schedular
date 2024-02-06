@@ -1,0 +1,87 @@
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
+
+class Task {
+    String name;
+    Date dueDate;
+    int priority;
+
+    public Task(String name, Date dueDate, int priority) {
+        this.name = name;
+        this.dueDate = dueDate;
+        this.priority = priority;
+    }
+
+    @Override
+    public String toString() {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        return "Task: " + name + "\nDue Date: " + dateFormat.format(dueDate) + "\nPriority: " + priority + "\n";
+    }
+}
+
+public class TaskManager {
+    private List<Task> tasks;
+
+    public TaskManager() {
+        this.tasks = new ArrayList<>();
+    }
+
+    public void addTask(String name, String dueDateString, int priority) {
+        try {
+            Date dueDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(dueDateString);
+            Task task = new Task(name, dueDate, priority);
+            tasks.add(task);
+            System.out.println("Task added successfully.");
+        } catch (ParseException e) {
+            System.out.println("Invalid date format. Please use yyyy-MM-dd HH:mm:ss");
+        }
+    }
+
+    public void viewTasks() {
+        if (tasks.isEmpty()) {
+            System.out.println("No tasks available.");
+        } else {
+            for (Task task : tasks) {
+                System.out.println(task);
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        TaskManager taskManager = new TaskManager();
+
+        while (true) {
+            System.out.println("\n1. Add Task");
+            System.out.println("2. View Tasks");
+            System.out.println("3. Exit");
+            System.out.print("Enter your choice: ");
+
+            int choice = scanner.nextInt();
+            scanner.nextLine();  // Consume newline character
+
+            switch (choice) {
+                case 1:
+                    System.out.print("Enter task name: ");
+                    String name = scanner.nextLine();
+                    System.out.print("Enter due date (yyyy-MM-dd HH:mm:ss): ");
+                    String dueDate = scanner.nextLine();
+                    System.out.print("Enter priority (1-5): ");
+                    int priority = scanner.nextInt();
+
+                    taskManager.addTask(name, dueDate, priority);
+                    break;
+                case 2:
+                    taskManager.viewTasks();
+                    break;
+                case 3:
+                    System.out.println("Exiting the Task Manager. Goodbye!");
+                    System.exit(0);
+                    break;
+                default:
+                    System.out.println("Invalid choice. Please try again.");
+            }
+        }
+    }
+}
